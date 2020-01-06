@@ -5,6 +5,7 @@ import random
 from pygame import *
 from wolf import *
 from egg import *
+# from loadings import *
 
 pygame.init()
 
@@ -14,7 +15,9 @@ screen = pygame.display.set_mode(SCREEN_SIZE)
 chickens = pygame.display.set_mode(SCREEN_SIZE)
 wolf = pygame.display.set_mode(SCREEN_SIZE)
 
+load = True
 running = True
+
 body = 'left'
 arms = 'down'
 
@@ -32,6 +35,8 @@ font = pygame.freetype.Font(None, 20)
 
 pygame.display.set_caption("Nu Pogodi!")
 
+FPS = 50
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -45,7 +50,44 @@ def load_image(name, colorkey=None):
     return image
 
 
+def terminate():
+    global running
+    running = False
+    global load
+    load = False
+
+def loading():
+    intro_text = ["ЗАСТАВКА"]
+
+    fon = pygame.transform.scale(load_image('fon.jpg'), (SCREEN_SIZE))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 50
+    LOAD = True
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+        pygame.display.flip()
+    pygame.display.update()
+    clock.tick(FPS)
+    while LOAD:
+        for events in pygame.event.get():
+            if events.type == pygame.quit:
+                terminate()
+            elif events.type == pygame.KEYDOWN or events.type == pygame.MOUSEBUTTONDOWN:
+                LOAD = False
+                global load
+                load = False
+
+
 while running:
+    if load:
+        loading()
 
     fon = pygame.transform.scale(load_image('fon.jpg'), SCREEN_SIZE)
     screen.blit(fon, (0, 0))
@@ -94,7 +136,7 @@ while running:
             eggs.update()
 
     if points > 0 and points % 10 == 0:
-        speed *= 0.8
+        speed *= 0.6
 
     Wolf.draw(screen, body, arms)
     eggs.draw(wolf)
@@ -107,6 +149,3 @@ else:
                 "Game Over {}".format(points), Color("#ff0000"))
     screen.blit(scoreText, (100, 20))
     pygame.display.update()
-
-
-pygame.quit()
