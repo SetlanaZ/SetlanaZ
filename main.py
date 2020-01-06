@@ -22,8 +22,9 @@ all_sprites = pygame.sprite.Group()
 eggs = pygame.sprite.Group()
 
 clock = pygame.time.Clock()
+speed = 3000
 MYEVENTTYPE = 10
-pygame.time.set_timer(MYEVENTTYPE, 2000)
+pygame.time.set_timer(MYEVENTTYPE, speed)
 
 points = 0
 
@@ -66,7 +67,7 @@ while running:
                 arms = 'down'
         if event.type == MYEVENTTYPE:
             egg = pygame.sprite.Sprite(eggs)
-            egg.image = load_image("egg.png", -2)
+            egg.image = load_image("egg.png", -1)
             egg.rect = egg.image.get_rect()
             egg.rect.x, egg.rect.y = Egg.get_coords(None)
             eggs.add(egg)
@@ -91,6 +92,9 @@ while running:
                         running = False
 
             eggs.update()
+
+    if points > 0 and points % 10 == 0:
+        speed *= 0.8
 
     Wolf.draw(screen, body, arms)
     eggs.draw(wolf)
