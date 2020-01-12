@@ -59,7 +59,9 @@ def terminate():
     global load
     load = False
 
+
 def loading():
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound('data/music/fonMusic.wav'), -1)
     global menu_screen
     global load
     intro_text = ["ЗАСТАВКА"]
@@ -86,6 +88,7 @@ def loading():
                 LOAD = False
                 terminate()
             elif events.type == pygame.KEYDOWN or events.type == pygame.MOUSEBUTTONDOWN:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                 LOAD = False
                 load = False
                 menu_screen = True
@@ -130,10 +133,12 @@ def menu():
                 running = False
             elif events.type == pygame.KEYDOWN:
                 if events.key == pygame.K_q:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     MENU = False
                     menu_screen = False
                     running = False
                 elif events.key == pygame.K_z:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     MENU = False
                     menu_screen = False
                     continue_game = True
@@ -178,18 +183,21 @@ def menu():
             elif events.type == pygame.MOUSEBUTTONDOWN:
                 if menu_buttons[0][2] > events.pos[0] > menu_buttons[0][0] and menu_buttons[0][3] > \
                         events.pos[1] > menu_buttons[0][1]:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     MENU = False
                     menu_screen = False
                     continue_game = True
                     RESTART_GAME = True
                 elif menu_buttons[1][2] > events.pos[0] > menu_buttons[1][0] and menu_buttons[1][3] > \
                         events.pos[1] > menu_buttons[1][1]:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     MENU = False
                     menu_screen = False
                     running = False
 
 
 def game_over():
+    pygame.mixer.Channel(0).unpause()
     global menu_screen
     global running
     menu_text = ["Игра закончена",
@@ -216,7 +224,6 @@ def game_over():
             pygame.draw.rect(screen, (0, 0, 0), (game_over_rect.x, game_over_rect.y, text_w, text_h), 1)
             game_over_buttons.append([game_over_rect.x, game_over_rect.y, game_over_rect.x + text_w,
                                       game_over_rect.y + text_h])
-            print(game_over_rect.x, game_over_rect.y, text_w, text_h)
         pygame.display.flip()
     pygame.display.update()
     clock.tick(FPS)
@@ -227,9 +234,11 @@ def game_over():
                 running = False
             elif events.type == pygame.KEYDOWN:
                 if events.key == pygame.K_q:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     game = False
                     running = False
                 elif events.key == pygame.K_w:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     game = False
                     menu_screen = True
             elif events.type == pygame.MOUSEMOTION:
@@ -272,22 +281,27 @@ def game_over():
             elif events.type == pygame.MOUSEBUTTONDOWN:
                 if game_over_buttons[0][2] > events.pos[0] > game_over_buttons[0][0] and game_over_buttons[0][3] > \
                         events.pos[1] > game_over_buttons[0][1]:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     game = False
                     menu_screen = True
                 elif game_over_buttons[1][2] > events.pos[0] > game_over_buttons[1][0] and game_over_buttons[1][3] > \
                         events.pos[1] > game_over_buttons[1][1]:
+                    pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                     game = False
                     running = False
 
 
 while running:
-    if load:
-        loading()
+    if not continue_game:
+        pygame.mixer.Channel(0).unpause()
+        if load:
+            loading()
 
-    if menu_screen:
-        menu()
+        if menu_screen:
+            menu()
 
     if continue_game:
+        pygame.mixer.Channel(0).pause()
         if RESTART_GAME:
             body = 'left'
             arms = 'down'
@@ -322,6 +336,7 @@ while running:
                 if key[pygame.K_DOWN]:
                     arms = 'down'
             if event.type == MYEVENTTYPE:
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound('data/music/egg_music.wav'))
                 egg = pygame.sprite.Sprite(eggs)
                 egg.image = load_image("egg.png", -1)
                 egg.rect = egg.image.get_rect()
@@ -345,6 +360,7 @@ while running:
                             points += 1
                             eggs.remove(egg)
                         else:
+                            continue_game = False
                             game_over()
                             break
 
