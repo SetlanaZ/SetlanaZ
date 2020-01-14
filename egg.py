@@ -48,8 +48,3 @@ def egg_cought(list_name, body, arms):
         return True
     else:
         return False
-
-
-
-
-

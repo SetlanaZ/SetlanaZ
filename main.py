@@ -5,7 +5,6 @@ import random
 from pygame import *
 from wolf import *
 from egg import *
-# from loadings import *
 
 pygame.init()
 
@@ -53,18 +52,15 @@ def load_image(name, colorkey=None):
     return image
 
 
-def terminate():
-    global running
-    running = False
-    global load
-    load = False
-
-
 def loading():
     pygame.mixer.Channel(0).play(pygame.mixer.Sound('data/music/fonMusic.wav'), -1)
     global menu_screen
     global load
-    intro_text = ["ЗАСТАВКА"]
+    global running
+    intro_text = ["НУ ПОГОДИ!",
+                  "С помощью стрелок управляйте волком,",
+                  "чтобы поймать яйца, падающие с четырех сторон.",
+                  "Если вы не поймаете яйцо - игра окончена."]
 
     fon = pygame.transform.scale(load_image('fon.jpg'), (SCREEN_SIZE))
     screen.blit(fon, (0, 0))
@@ -86,7 +82,8 @@ def loading():
         for events in pygame.event.get():
             if events.type == pygame.QUIT:
                 LOAD = False
-                terminate()
+                running = False
+                load = False
             elif events.type == pygame.KEYDOWN or events.type == pygame.MOUSEBUTTONDOWN:
                 pygame.mixer.Channel(2).play(pygame.mixer.Sound('data/music/press_button.wav'))
                 LOAD = False
